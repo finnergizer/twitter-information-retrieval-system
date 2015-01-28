@@ -1,0 +1,2 @@
+Whoosh for search engine library
+Gensim package
