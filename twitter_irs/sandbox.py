@@ -9,13 +9,13 @@ import csv
 def run():
     corpus = open("trec-microblog11.txt")
     stopword_set = set(stopwords.words("english"))
-    stemmer = PorterStemmer("english")
+    stemmer = PorterStemmer()
 
-    # plurals = ['caresses', 'flies', 'dies', 'mules', 'denied',
-    #            'died', 'agreed', 'owned', 'humbled', 'sized',
-    #            'meeting', 'stating', 'siezing', 'itemization',
-    #            'sensational', 'traditional', 'reference', 'colonizer',
-    #            'plotted']
+    plurals = ['caresses', 'flies', 'dies', 'mules', 'denied',
+               'died', 'agreed', 'owned', 'humbled', 'sized',
+               'meeting', 'stating', 'siezing', 'itemization',
+               'sensational', 'traditional', 'reference', 'colonizer',
+               'plotted']
 
     singles = []
     for plural in plurals:
@@ -27,10 +27,12 @@ def run():
     #         if w.lower() not in stopword_set:
     #             print w
 #Parse the corpus text document into a list of dictionaries (each dict having an id and msg)
-corpus = []
-
-with open("trec-microblog11.txt") as f:
-     reader=csv.reader(f,delimiter='\t')
-     for id, msg in reader:
-         corpus.append({"id": id, "msg": msg})
+# corpus = []
+#
+# with open("trec-microblog11.txt") as f:
+#      reader=csv.reader(f,delimiter='\t')
+#      for id, msg in reader:
+#          corpus.append({"id": id, "msg": msg})
 # print set(stopwords.words("english"))
+
+run();

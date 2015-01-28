@@ -12,8 +12,8 @@ def parse_corpus():
              corpus.append({"id": id, "msg": msg})
     return corpus;
 
-def run():
-    corpus = open("trec-microblog11.txt")
+def pre_process():
+    corpus = open("test.txt")
     stopword_set = set(stopwords.words("english"))
     stemmer = PorterStemmer()
 
@@ -26,5 +26,5 @@ def run():
 
     print(unstemmed)
 
-# run()
+pre_process();
 # print set(stopwords.words("english"))
