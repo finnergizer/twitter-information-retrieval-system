@@ -1,2 +1,3 @@
 Whoosh for search engine library
 Gensim package
+NLTK for Python
