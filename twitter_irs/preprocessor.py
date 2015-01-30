@@ -9,7 +9,7 @@ def parse_corpus():
     with open("trec-microblog11.txt") as f:
          reader=csv.reader(f,delimiter='\t')
          for id, msg in reader:
-             corpus.append({"id": id, "msg": msg})
+             corpus.append({"id": int(unicode(id, "utf-8-sig")), "msg": msg})
     return corpus;
 
 def pre_process():
@@ -26,5 +26,6 @@ def pre_process():
 
     print(unstemmed)
 
-pre_process();
+# pre_process();
+print parse_corpus();
 # print set(stopwords.words("english"))

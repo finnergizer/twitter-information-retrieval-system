@@ -3,16 +3,16 @@ __author__ = 'shaughnfinnerty'
 
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-from nltk.stem.snowball import SnowballStemmer
+from nltk.stem.snowball import EnglishStemmer
+from nltk.stem.lancaster import LancasterStemmer
 import csv
 
 def run():
     corpus = open("trec-microblog11.txt")
     stopword_set = set(stopwords.words("english"))
-    stemmer = PorterStemmer()
-
-    plurals = ['caresses', 'flies', 'dies', 'mules', 'denied',
-               'died', 'agreed', 'owned', 'humbled', 'sized',
+    stemmer = EnglishStemmer()
+    plurals = ['loving','caresses', 'flies', 'dies', 'mules', 'denied', 'deny',
+               'died', 'agree','agreed', 'owned', 'humbled', 'sized',
                'meeting', 'stating', 'siezing', 'itemization',
                'sensational', 'traditional', 'reference', 'colonizer',
                'plotted']
