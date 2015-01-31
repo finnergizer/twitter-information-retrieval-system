@@ -1,7 +1,10 @@
-__author__ = 'shaughnfinnerty'
-from nltk.corpus import stopwords
-from nltk.stem.porter import PorterStemmer
+import codecs
 import csv
+from sets import Set
+
+import utils
+
+__author__ = 'shaughnfinnerty'
 
 # Parse the corpus text document into a list of dictionaries (each dict having an id and msg)
 def parse_corpus():
@@ -13,19 +16,15 @@ def parse_corpus():
     return corpus;
 
 def pre_process():
-    corpus = open("test.txt")
-    stopword_set = set(stopwords.words("english"))
-    stemmer = PorterStemmer()
+    corpus = parse_corpus()
+    corpus_tokens = Set()
+    for doc in corpus:
+        for w in utils.process_txt(doc["msg"], True):
+            corpus_tokens.add(w)
+    return corpus_tokens
 
-    unstemmed = []
-    for line in corpus:
-        for w in line.split():
-            w_lower = w.lower()
-            if w_lower not in stopword_set:
-                unstemmed.append(w_lower)
 
-    print(unstemmed)
-
-# pre_process();
-print parse_corpus();
-# print set(stopwords.words("english"))
+# pre_process()
+with open("tokens.txt", "w") as f:
+    for w in pre_process():
+        f.write(w + "\n")

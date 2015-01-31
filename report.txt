@@ -1,0 +1,9 @@
+Set data structure used when creating tokens for indexing to ensure uniqueness.
+Set data structure used to determine membership of tokens in stopword and punctuation sets in O(1) time complexity.
+
+Removed hyperlinks from documents as they were tokenized strangely; However, we can change process_txt() to allow
+for manipulation of these URLs for better document processing later on.
+
+As of right now, sentence tokenizing and stemming only works correctly on English text; I have added a try, catch
+blocks where it is called as it will throw an error sometimes if it is not english text or there is strange unicode
+characters, but this can be improved once a stable version is present.
