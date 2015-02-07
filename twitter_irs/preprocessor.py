@@ -12,19 +12,33 @@ def parse_corpus():
     with open("trec-microblog11.txt") as f:
          reader=csv.reader(f,delimiter='\t')
          for id, msg in reader:
-             corpus.append({"id": int(unicode(id, "utf-8-sig")), "msg": msg})
+             # corpus.append({"id": int(unicode(id, "utf-8-sig")), "msg": msg})
+             corpus.append({"id": int(unicode(id, "utf-8-sig")), "msg": utils.process_txt(unicode(msg,errors="replace"))})
     return corpus;
 
-def pre_process():
-    corpus = parse_corpus()
+def parse_corpus_hash():
+    corpus = {}
+    with open("trec-microblog11.txt") as f:
+
+        reader=csv.reader(f,delimiter='\t')
+        for id, msg in reader:
+            # corpus.append({"id": int(unicode(id, "utf-8-sig")), "msg": msg})
+            corpus[int(unicode(id, "utf-8-sig"))] = utils.process_txt(unicode(msg,errors="replace"))
+    return corpus;
+
+
+
+def pre_process(corpus):
     corpus_tokens = Set()
     for doc in corpus:
-        for w in utils.process_txt(doc["msg"], True):
+        # for w in utils.process_txt(doc["msg"], True):
+        for w in doc["msg"]:
             corpus_tokens.add(w)
     return corpus_tokens
 
 
 # pre_process()
-with open("tokens.txt", "w") as f:
-    for w in pre_process():
-        f.write(w + "\n")
+# with open("tokens.txt", "w") as f:
+#     for w in pre_process():
+#         f.write(w + "\n")
+# print len(pre_process());

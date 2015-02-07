@@ -1,3 +1,6 @@
 Whoosh for search engine library
 Gensim package
 NLTK for Python
+
+Feb 6: May want to have the index store hashes with keys based on doc ids and values based on
+        frequency; have to rewrite create document vectors in query.py;
