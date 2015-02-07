@@ -1,3 +1,5 @@
+from collections import Counter
+from math import log
 import re
 import string
 from nltk import RegexpTokenizer, TreebankWordTokenizer, sent_tokenize
@@ -75,3 +77,47 @@ def process_txt(txt, stem=True):
                 else:
                     words.append(w_lower)
     return words
+
+def process_query(query, frequency_index, corpus_size):
+    formatted_query = process_txt(query);
+    word_counter = Counter(formatted_query);
+    vector = []
+    freq_vector = []
+    for key in word_counter:
+        vector.append(key)
+        max_freq = find_max_frequency(frequency_index,key);
+        term_freq = compute_term_frequency(word_counter[key], max_freq)
+        idf = compute_idf(len(frequency_index.get(key, [])), corpus_size)
+        query_term_weight = (0.5 + 0.5*term_freq)*idf
+        freq_vector.append(query_term_weight)
+    return (vector, freq_vector)
+
+def find_max_frequency(frequency_index, term):
+    doc_list = frequency_index.get(term, {})
+    if len(doc_list) > 0:
+        freq = 0
+        for doc in doc_list:
+            if doc_list[doc] > freq:
+                freq = doc_list[doc]
+    else:
+        freq = 0
+    return freq
+
+def compute_term_frequency(frequency, max_frequency):
+    if(max_frequency > 0):
+        return float(frequency)/max_frequency
+    else:
+        return 0
+
+def compute_idf(document_frequency, corpus_size):
+    if(document_frequency > 0):
+        return log(float(corpus_size)/document_frequency, 2)
+    else:
+        return 0
+
+def compute_tf_idf_weight(term_frequency, idf):
+    return term_frequency*idf
+
+
+
+

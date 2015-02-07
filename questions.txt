@@ -1,3 +1,6 @@
 Can we use any libraries or toolkits?
 How does the TA evaluate if he/she needs to install the python packages?
 Should we remove hyperlinks? Hashtags? A: It seems as if google does not match hashtags...
+
+
+*COS Similarity does not work well with 1D vectors...*

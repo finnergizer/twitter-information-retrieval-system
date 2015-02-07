@@ -7,23 +7,17 @@ import utils
 __author__ = 'shaughnfinnerty'
 
 # Parse the corpus text document into a list of dictionaries (each dict having an id and msg)
-def parse_corpus():
-    corpus = []
-    with open("trec-microblog11.txt") as f:
-         reader=csv.reader(f,delimiter='\t')
-         for id, msg in reader:
-             # corpus.append({"id": int(unicode(id, "utf-8-sig")), "msg": msg})
-             corpus.append({"id": int(unicode(id, "utf-8-sig")), "msg": utils.process_txt(unicode(msg,errors="replace"))})
-    return corpus;
-
-def parse_corpus_hash():
+def parse_corpus(raw=False):
     corpus = {}
     with open("trec-microblog11.txt") as f:
 
         reader=csv.reader(f,delimiter='\t')
         for id, msg in reader:
             # corpus.append({"id": int(unicode(id, "utf-8-sig")), "msg": msg})
-            corpus[int(unicode(id, "utf-8-sig"))] = utils.process_txt(unicode(msg,errors="replace"))
+            if raw:
+                corpus[int(unicode(id, "utf-8-sig"))] = unicode(msg,errors="replace")
+            else:
+                corpus[int(unicode(id, "utf-8-sig"))] = utils.process_txt(unicode(msg,errors="replace"))
     return corpus;
 
 

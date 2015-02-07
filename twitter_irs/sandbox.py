@@ -94,9 +94,6 @@ def tokenize():
 # nltk.download()
 
 
-# print set(stopwords.words("english"))
-
-
 def indexing(corpus, tokens):
     """ Creates an inverted index with message id and frequency."""
     inverted_index = {}

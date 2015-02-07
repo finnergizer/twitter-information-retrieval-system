@@ -3,4 +3,8 @@ Gensim package
 NLTK for Python
 
 Feb 6: May want to have the index store hashes with keys based on doc ids and values based on
-        frequency; have to rewrite create document vectors in query.py;
+frequency; have to rewrite create document vectors in query.py;
+
+-count the times in which the tokens appear as substrings as well?
+
+-read queries from xml file with multiple roots; I had to add root tag to make it valid XML...
