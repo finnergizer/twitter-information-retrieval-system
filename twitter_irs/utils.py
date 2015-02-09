@@ -2,7 +2,7 @@ from collections import Counter
 from math import log
 import re
 import string
-from nltk import RegexpTokenizer, TreebankWordTokenizer, sent_tokenize
+from nltk import TreebankWordTokenizer, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.snowball import EnglishStemmer
 

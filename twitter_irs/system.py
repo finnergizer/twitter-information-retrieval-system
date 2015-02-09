@@ -1,53 +1,51 @@
-from twitter_irs.indexing import load_index, corpus_counter, create_frequency_index, index_to_file, create_tf_idf_index, \
-    load_index
-from twitter_irs.preprocessor import parse_corpus, pre_process
-from twitter_irs.query import retrieve_limited_set, create_document_vectors, rank_vectors, execute_query
-from twitter_irs.utils import process_query
+from twitter_irs.indexing import Indexer
+from twitter_irs.preprocessor import Preprocessor
+from twitter_irs.query import Query
 from xml.etree import ElementTree
 import re
+
 __author__ = 'shaughnfinnerty'
 
 
+class System:
+    def __init__(self, corpus_path, freq_index_path, tf_idf_index_path, create_index=False):
+        self.preprocessor = Preprocessor(corpus_path);
+        self.indexer = Indexer()
+        self.corpus = {}
+        # if create_index, then run the create_indexes, otherwise, load them from their already existing file locations
+        if create_index:
+            print "Creating frequency and tf_idf_indexes."
+            self.corpus = self.preprocessor.parse_corpus()
+            tokens = self.preprocessor.create_tokens(self.corpus)
+            c_counter = self.preprocessor.create_corpus_counter(self.corpus)
+            self.frequency_index = self.indexer.create_frequency_index(c_counter, tokens)
+            self.indexer.index_to_file(self.frequency_index, freq_index_path)
+            self.tf_idf_index = self.indexer.create_tf_idf_index(self.frequency_index)
+            self.indexer.index_to_file(self.tf_idf_index, tf_idf_index_path)
+        else:
+            print "Loading frequency and tf_idf indexes."
+            self.corpus = self.preprocessor.parse_corpus(True)
+            self.frequency_index = self.indexer.load_index(freq_index_path)
+            self.tf_idf_index = self.indexer.load_index(tf_idf_index_path)
+        self.query = Query(self.frequency_index, self.tf_idf_index, self.corpus)
 
 
-def test_system(run_name, tf_idf_index, frequency_index, corpus):
-    query_tree = ElementTree.parse("topics_MB1-50.xml")
-
-    with open("results.txt", 'wb') as f:
-        for child in query_tree.getroot():
-            qid_re = re.compile("\d{3}")
-            qid = int(qid_re.search(child[0].text).group(0))
-            query_results = execute_query(child[1].text, tf_idf_index, frequency_index, corpus)
-            for i in range(len(query_results)):
-                if i >= 1000:
-                    break
-                # print_out = child[0].text + "\t" + "Q0" + "\t" + query_results[i].get("id") + "\t" + str(i+1) + "\t" + \
-                #             str(query_results[i].get("score")) + "\t" + run_name + "\n"
-                print_out =  str(qid) + " " + "Q0" + " " + query_results[i].get("id") + " " + str(i+1) + " " + \
-                             str(query_results[i].get("score")) + " " + run_name + "\n"
-                f.write(print_out)
-            # f.write("====================================================================\n")
+    def test_system(self, run_name, query_path, results_path):
+        query_tree = ElementTree.parse(query_path)
+        with open(results_path, 'wb') as f:
+            for child in query_tree.getroot():
+                qid_re = re.compile("\d{3}")
+                qid = int(qid_re.search(child[0].text).group(0))
+                query_results = self.query.execute_query(child[1].text)
+                for i in range(len(query_results)):
+                    if i >= 1000:
+                        break
+                    print_out = str(qid) + " " + "Q0" + " " + query_results[i].get("id") + " " + str(i + 1) + " " + \
+                                str(query_results[i].get("score")) + " " + run_name + "\n"
+                    f.write(print_out)
 
 
-def run(createIndex=False):
-    corpus = {}
-    frequency_index = {}
-    tf_idf_index = {}
-    if createIndex:
-        c_counter = []
-        tokens = []
-        corpus = parse_corpus()
-        c_counter = corpus_counter(corpus)
-        tokens = pre_process(corpus)
-        frequency_index = create_frequency_index(c_counter, tokens)
-        index_to_file(frequency_index, "frequency-index.txt")
-        tf_idf_idx = create_tf_idf_index(frequency_index, len(corpus))
-        index_to_file(tf_idf_index, "tf-idf-index.txt")
-    else:
-        corpus = parse_corpus(True)
-        frequency_index = load_index("frequency-index.txt")
-        tf_idf_index = load_index("tf-idf-index.txt")
 
-    test_system("myRun", tf_idf_index, frequency_index, corpus)
 
-run()
+system = System("data/trec-microblog11.txt", "index/frequency-index.txt", "index/tf-idf-index.txt", False)
+system.test_system("myRun", "data/topics_MB1-50.xml", "data/results.txt")
