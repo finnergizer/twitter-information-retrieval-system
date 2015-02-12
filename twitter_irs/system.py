@@ -1,5 +1,5 @@
-from twitter_irs.indexing import Indexer
-from twitter_irs.preprocessor import Preprocessor
+from indexing import Indexer
+from preprocessor import Preprocessor
 from query import Query
 from xml.etree import ElementTree
 import re

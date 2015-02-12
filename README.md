@@ -91,6 +91,8 @@ During the preprocessing steps, we implemented a text processor to stem, remove 
 
 When creating token list, we used a Set data structure to ensure uniqueness in the tokens generated. When adding all the tokens from the processed messages to the Set, the characteristics of this data structure allowed for constant time, O(1), checking of membership of the token, and would only add to the Set if the token did not already exist.
 
+In addition, we also used a Set data structure for the stopword check. By placing the stopwords in a set, we were able to check if a word was a stopword in constant time using this key-based data structure.
+
 When creating the indexes, we initially used lists containing associative arrays with ids and frequency or term weights, respectively. However, when searching the index, it was realized that the lists would have be traversed in order to find a matching ID. As an alternative, we decided to use associative arrays as the values for each token in the index. The associative arrays contained document ids as keys, and frequency or term-weights as their values. With this approach, we were able to check the associative array value of the token in constant time (by checking if there existed a key-value pair for the document id), instead of iterating through the list of associative arrays as before. We felt that this would increase performance of the retrieval/ranking process.
 
 For stemming, we used a Snowball based stemming algorithm which is often seen as an improvement over Porter algorithms due to its stricter restrictions and more aggressive stemming rules. After comparing stemming results from Porter, we felt it was best to use this Snowball based stemmer for our data.
@@ -266,5 +268,5 @@ For Query 25, querying with the words "TSA airport screening", we returned the f
 9. Really looking forward to my TSA screening; haven`t gotten laid in a couple of weeks.
 10. TSA to Test New Screening at Hartsfield-Jackson: The TSA in coming days at Hartsfield-Jackson Atlanta Internatio... http://bit.ly/e8NW0S
 
-###Isssues
+###Interesting Issues
 An interesting observations was noted when computing cosine similarity values between a query and documents with only one word, due to the fact that only 1D vectors are used, every single matching document is given the same score of 1.0. Even if the term weight is heigher in one document, due to the 1 dimensional nature of the vector, the measure always results in 1.0.

@@ -1,6 +1,6 @@
 from sets import Set
 from numpy.linalg import linalg
-from twitter_irs.utils import process_query
+from utils import process_query
 
 __author__ = 'shaughnfinnerty'
 

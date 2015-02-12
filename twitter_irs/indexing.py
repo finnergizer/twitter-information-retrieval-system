@@ -1,5 +1,5 @@
 import json
-from twitter_irs.utils import find_max_frequency, compute_term_frequency, compute_idf, compute_tf_idf_weight
+from utils import find_max_frequency, compute_term_frequency, compute_idf, compute_tf_idf_weight
 
 __author__ = 'shaughnfinnerty'
 
