@@ -97,6 +97,7 @@ For stemming, we used a Snowball based stemming algorithm which is often seen as
 
 ##Results
 When running trec-eval, we received the following results for our system:
+
 | measure       | query | value  |
 |---------------|-------|--------|
 | num_q         | all   | 49     |
