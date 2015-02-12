@@ -8,20 +8,13 @@ ___
 1. Requires Python 2.7
 
 2. Natural Language Toolkit (NLTK) - <a href="http://www.nltk.org/install.html">Installation instructions</a>
-<<<<<<< HEAD
-=======
-
-3. **Note: It is important to install numpy in the instructions listed as they are used to provide the linear algebra functions used for cosine similarity computations**
-
-4. Once NLTK is installed, you must run the following to download NLTK data - stopwords and punkt for tokenizing and preprocessing.
->>>>>>> cd471ddafca9adb2ed11e5b8331b4441c3d3d6c0
 
 3. **Note: It is important to install numpy in the instructions listed as they are used to provide the linear algebra functions used for cosine similarity computations**
 
 4. Once NLTK is installed, you must run the following to download NLTK data - stopwords and punkt for tokenizing and preprocessing.
 
-        ```import nltk
-        nltk.download()```
+        import nltk
+        nltk.download()
 
     This code will launch an NLTK downloader window. Click the **All Packages** tab, then look for the identifiers **punkt** (for using the punkt punctuation tokenizer), and **stopwords**. Select both and click download. This will download the data needed by the NLTK functions used to tokenize and preprocess the corpus.
 
