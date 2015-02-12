@@ -15,7 +15,7 @@ Once NLTK is installed, you must run the following to download NLTK data - stopw
 This code will launch an NLTK downloader window. Click the **All Packages** tab, then look for the identifiers **punkt** (for using the punkt punctuation tokenizer), and **stopwords**. Select both and click download. This will download the data needed by the NLTK functions used to tokenize and preprocess the corpus.
 
 ##Functionality
-The entire system is located under the *twitter\_irs* module. Within this module there are multiple python files separated by the functionality that they provide to the system.
+The entire system is located under the *twitter_irs* module. Within this module there are multiple python files separated by the functionality that they provide to the system.
 
 ###prepocessor.py
 This file provides a class that is used to preprocess a document corpus of Twitter messages in the TREC provided format.
@@ -32,9 +32,9 @@ This class also provides a method *create_tokens* which generates a unique set o
 ###utils.py
 utils.py provides helper functions that are used throughout the application, in preprocessing, index creation, and query processing. It was a design decision to place these functions in a seperate file to promote their reuse and consistency in the application. 
 
-For example, we use the 'process\_txt' method when prepocessing the messages, and apply the same method to queries in 'process_query' so that stop words are removed and stem words are used when applying the query. 
+For example, we use the `process_txt` method when prepocessing the messages, and apply the same method to queries in `process_query` so that stop words are removed and stem words are used when applying the query. 
 
-In addition, we include the functions used to compute tf-idf index values. The function 'find\_max\_frequency' is used when computing the normalized term frequency for a document or query term and requires a frequency index **(hence why there are two indexes created)**. The function 'compute\_term\_frequency' is used in combination with 'find\_max\_frequency' method to compute term frequencies which are eventually used in 'compute\_tf\_idf\_weight' to compute the tf-idf inverted index which is used for the cosine similarity calculations during retrieval and ranking.
+In addition, we include the functions used to compute tf-idf index values. The function `find_max_frequency` is used when computing the normalized term frequency for a document or query term and requires a frequency index **(hence why there are two indexes created)**. The function `compute_term_frequency` is used in combination with `find_max_frequency` method to compute term frequencies which are eventually used in `compute_tf_idf_weight` to compute the tf-idf inverted index which is used for the cosine similarity calculations during retrieval and ranking.
 
 
 ###indexing.py
@@ -56,12 +56,12 @@ Using python linear algebra methods, the cosine similarity measure is calculated
 ###system.py
 System is the main execution class of the Information Retrieval system. In here we initiate the system specifying the location of the twitter messages, the location of the frequency-index (either to be saved or loaded from), and the location of the tf-idf-index (again, either where it should be saved or loaded from).
 
-When running the 'test\_system' method, we input the query information (**Note: we have added a root element surrounding the queries so that it would be valid XML, and thus allowed for its use with python XML functions in ElementTree**),  and specify the location to save the results. This system will run 'Query.execute\_query' on every query in the XML file and output the results to the specified location in the appropriate format for its use with the trec-eval script.
+When running the `test_system` method, we input the query information (**Note: we have added a root element surrounding the queries so that it would be valid XML, and thus allowed for its use with python XML functions in ElementTree**),  and specify the location to save the results. This system will run `Query.execute_query` on every query in the XML file and output the results to the specified location in the appropriate format for its use with the trec-eval script.
 
 ##Running the System
 First, ensure you  have installed the NLTK dependencies and downloaded the NLTK data as follows in the Dependencies section.
 
-From the command line, go to twitter\_irs directory and run:
+From the command line, go to twitter_irs directory and run:
 	python system.py
 
 If you would like to re-run the creation of the indexes, in system.py change the following lines:
@@ -78,11 +78,11 @@ The last boolean parameter in the system constructors specifies whether or not t
 
 ###Evaluating the system
 
-Place the results.txt file ine the same directory as the trec\_eval script and run the following code ensuring the qrels file is existing there as well:
+Place the results.txt file ine the same directory as the trec_eval script and run the following code ensuring the qrels file is existing there as well:
 
 	./trec_eval Trec_microblog11-qrels.txt results.txt
 
-**Our most recent results file exists at twitter\_irs\data\results.txt**
+**Our most recent results file exists at twitter_irs\data\results.txt**
 
 ##Notable Algorithms, Data Structures, and Optimizations
 While there are tools available for Python Information Retrieval Systems such as Whoosh, we felt it would be a better experience to implement the indexing features from scratch using the methods and algorithms learned during class. In addition, given the nature of the data (Twitter messages), we felt that having more direct control of the index creation would allow more flexibility to handle some of the issues that arise in Twitter data (i.e. mispelled words, URLs, hashtags etc.)
@@ -247,7 +247,7 @@ For Query 1, querying with the words "BBC World Service staff cuts", we returned
 4. A statement on the BBC World Service, ahead of staff briefings/ further details on Weds http://bbc.in/dFfXIW #bbcworldservice #bbccuts
 5. Quarter of BBC world service staff to go, uk foreign office grant reduction of 17.5%.
 6. RT @davelength: Anyway, while Twitter goes wild about Andy Gray, a quarter of the BBC World Service staff gets laid off and nobody notices.
-7. BBC online cuts shows 'contempt' for hard working staff says NUJ (The Drum) http://muk.fm/11zu #medianews
+7. BBC online cuts shows `contempt` for hard working staff says NUJ (The Drum) http://muk.fm/11zu #medianews
 8. BBC World Service confirms cuts: TV News: Broadcaster to lose Macedonian, Albanian and Serbian programming -- Th... http://bit.ly/eusLgP
 9. BBC World Service forecast to lose 30m listeners as cuts announced http://gu.com/p/2mkqh/tf
 10. News Radio listeners? Save the BBC world service from savage cuts. http://bit.ly/eoGJeS
@@ -263,7 +263,7 @@ For Query 25, querying with the words "TSA airport screening", we returned the f
 6. TSA halts private screening program http://bit.ly/hUzJ3t
 7. Atl Business Chronicle: TSA to test new screening at Hartsfield-Jackson http://brkg.at/hR3W3y
 8. Obama makes fun of his own TSA screening procedures. Someone is off message! #sotu
-9. Really looking forward to my TSA screening; haven't gotten laid in a couple of weeks.
+9. Really looking forward to my TSA screening; haven`t gotten laid in a couple of weeks.
 10. TSA to Test New Screening at Hartsfield-Jackson: The TSA in coming days at Hartsfield-Jackson Atlanta Internatio... http://bit.ly/e8NW0S
 
 ###Isssues
