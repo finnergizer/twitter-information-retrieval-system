@@ -40,7 +40,6 @@ url_regex = re.compile(
     # resource path
     u"(?:/\S*)?", re.UNICODE)
 
-# punctuation_tokenizer = RegexpTokenizer(u'\w+\'\w+|\w+')
 tokenizer = TreebankWordTokenizer()
 
 stopword_set = set(stopwords.words("english"))
@@ -50,6 +49,11 @@ stemmer = EnglishStemmer()
 
 # remove URLs, punctuation, stopwords, and stem
 def process_txt(txt, stem=True):
+    '''
+    :param txt:
+    :param stem:
+    :return:
+    '''
     words = []
     txt_stripped = url_regex.sub("", txt)
     try:

@@ -1,6 +1,6 @@
 from twitter_irs.indexing import Indexer
 from twitter_irs.preprocessor import Preprocessor
-from twitter_irs.query import Query
+from query import Query
 from xml.etree import ElementTree
 import re
 
@@ -10,7 +10,6 @@ __author__ = 'shaughnfinnerty'
 class System:
     def __init__(self, corpus_path, freq_index_path, tf_idf_index_path, create_index=False):
         self.preprocessor = Preprocessor(corpus_path);
-        self.indexer = Indexer()
         self.corpus = {}
         # if create_index, then run the create_indexes, otherwise, load them from their already existing file locations
         if create_index:
@@ -18,13 +17,15 @@ class System:
             self.corpus = self.preprocessor.parse_corpus()
             tokens = self.preprocessor.create_tokens(self.corpus)
             c_counter = self.preprocessor.create_corpus_counter(self.corpus)
-            self.frequency_index = self.indexer.create_frequency_index(c_counter, tokens)
+            self.indexer = Indexer(c_counter, tokens)
+            self.frequency_index = self.indexer.create_frequency_index()
             self.indexer.index_to_file(self.frequency_index, freq_index_path)
-            self.tf_idf_index = self.indexer.create_tf_idf_index(self.frequency_index)
+            self.tf_idf_index = self.indexer.create_tf_idf_index(self.frequency_index, len(self.frequency_index))
             self.indexer.index_to_file(self.tf_idf_index, tf_idf_index_path)
         else:
             print "Loading frequency and tf_idf indexes."
             self.corpus = self.preprocessor.parse_corpus(True)
+            self.indexer = Indexer()
             self.frequency_index = self.indexer.load_index(freq_index_path)
             self.tf_idf_index = self.indexer.load_index(tf_idf_index_path)
         self.query = Query(self.frequency_index, self.tf_idf_index, self.corpus)
@@ -43,8 +44,6 @@ class System:
                     print_out = str(qid) + " " + "Q0" + " " + query_results[i].get("id") + " " + str(i + 1) + " " + \
                                 str(query_results[i].get("score")) + " " + run_name + "\n"
                     f.write(print_out)
-
-
 
 
 system = System("data/trec-microblog11.txt", "index/frequency-index.txt", "index/tf-idf-index.txt", False)

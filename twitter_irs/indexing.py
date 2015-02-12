@@ -5,23 +5,24 @@ __author__ = 'shaughnfinnerty'
 
 
 class Indexer:
-    def __init__(self):
-        print "Indexer created."
+    def __init__(self, corpus_counter=None, tokens=None):
+        self.corpus_counter = corpus_counter
+        self.tokens = tokens
 
-    def create_frequency_index(self, corpus_counter, tokens):
+    def create_frequency_index(self):
         """ Creates an inverted index with hashes using message id as key and frequency as value"""
         inverted_freq_index = {}
         i = 1
-        for token in tokens:
+        for token in self.tokens:
             inverted_freq_index[token] = {}
             if (i % 1000 == 0):
-                print(str(float(i)/len(tokens)*100) + "% complete creating frequency index.")
+                print(str(float(i)/len(self.tokens)*100) + "% complete creating frequency index.")
             i = i+1
-            for document in corpus_counter:
-                counter = document["msg_counter"]
+            for document in self.corpus_counter:
+                counter = self.corpus_counter[document]
                 freq = counter[token]
                 if freq > 0:
-                    inverted_freq_index[token].update({document["id"]: freq})
+                    inverted_freq_index[token].update({document: freq})
 
         return inverted_freq_index
 
@@ -49,5 +50,3 @@ class Indexer:
         with open(path, "rb") as f:
             index = json.loads(f.read())
         return index;
-
-
