@@ -5,14 +5,18 @@ ___
 
 ##Dependencies
 
-Natural Language Toolkit (NLTK) - <a href="http://www.nltk.org/install.html">Installation instructions</a>
+1. Requires Python 2.7
 
-Once NLTK is installed, you must run the following to download NLTK data - stopwords and punkt for tokenizing and preprocessing.
+2. Natural Language Toolkit (NLTK) - <a href="http://www.nltk.org/install.html">Installation instructions</a>
 
-	import nltk
-	nltk.download()
+3. **Note: It is important to install numpy in the instructions listed as they are used to provide the linear algebra functions used for cosine similarity computations**
 
-This code will launch an NLTK downloader window. Click the **All Packages** tab, then look for the identifiers **punkt** (for using the punkt punctuation tokenizer), and **stopwords**. Select both and click download. This will download the data needed by the NLTK functions used to tokenize and preprocess the corpus.
+4. Once NLTK is installed, you must run the following to download NLTK data - stopwords and punkt for tokenizing and preprocessing.
+
+        ```import nltk
+        nltk.download()```
+
+    This code will launch an NLTK downloader window. Click the **All Packages** tab, then look for the identifiers **punkt** (for using the punkt punctuation tokenizer), and **stopwords**. Select both and click download. This will download the data needed by the NLTK functions used to tokenize and preprocess the corpus.
 
 ##Functionality
 The entire system is located under the *twitter_irs* module. Within this module there are multiple python files separated by the functionality that they provide to the system.
@@ -26,7 +30,7 @@ In addition, the Preprocessor can create a "corpus counter" which takes the list
 
 We were careful to maintain the encoding of the characters as best as possible during processing. We ensured that any unknown characters were replaced with a standard unicode character. This allowed for tokenization and further processing/stemming to occur to any characters in unicode. While this allowed characters more than just those in standard ASCII, it also increased the amount of tokens created to over 60000. This would only have a notable effect on index creation time, but would allow for foreign words to be used as searchable tokens (i.e. if any future queries involved foreign languages).
 
-This class also provides a method *create_tokens* which generates a unique set of tokens to be used as keys in the index creation that follows. 
+This class also provides a method `create_tokens` which generates a unique set of tokens to be used as keys in the index creation that follows. 
 
 
 ###utils.py
@@ -87,7 +91,7 @@ Place the results.txt file ine the same directory as the trec_eval script and ru
 ##Notable Algorithms, Data Structures, and Optimizations
 While there are tools available for Python Information Retrieval Systems such as Whoosh, we felt it would be a better experience to implement the indexing features from scratch using the methods and algorithms learned during class. In addition, given the nature of the data (Twitter messages), we felt that having more direct control of the index creation would allow more flexibility to handle some of the issues that arise in Twitter data (i.e. mispelled words, URLs, hashtags etc.)
 
-During the preprocessing steps, we implemented a text processor to stem, remove stopwords, shorten contractions, and filter messages as we seemed fit. Creating this global text processor allowd for the method to be used on both messages and queries (to maintain a consistency, for example, in stemmed words matching). Within this processor, we were able to add modifications such as URL removers so that URLs would not be parsed strangely as tokens. We added the possibility of multiple sentences to this processor by first processing the message under the assumption that multiple sentences did exist. If not, it would continue to tokenize the text using a TreeBankWord tokenizer which uniquely split contractions into their primary form.
+During the preprocessing steps, we implemented a text processor to stem, remove stopwords, shorten contractions, and filter messages as we seemed fit. Creating this global text processor allowed for the method to be used on both messages and queries (to maintain a consistency, for example, in stemmed words matching). Within this processor, we were able to add modifications such as URL removers so that URLs would not be parsed strangely as tokens. We added the possibility of multiple sentences to this processor by first processing the message under the assumption that multiple sentences did exist. If not, it would continue to tokenize the text using a TreeBankWord tokenizer which uniquely split contractions into their primary form.
 
 When creating token list, we used a Set data structure to ensure uniqueness in the tokens generated. When adding all the tokens from the processed messages to the Set, the characteristics of this data structure allowed for constant time, `O(1)`, checking of membership of the token, and would only add to the Set if the token did not already exist.
 
@@ -95,9 +99,9 @@ In addition, we also used a Set data structure for the stopword check. By placin
 
 When creating the indexes, we initially used lists containing associative arrays with ids and frequency or term weights, respectively. However, when searching the index, it was realized that the lists would have be traversed in order to find a matching ID. As an alternative, we decided to use associative arrays as the values for each token in the index. The associative arrays contained document ids as keys, and frequency or term-weights as their values. With this approach, we were able to check the associative array value of the token in constant time (by checking if there existed a key-value pair for the document id), instead of iterating through the list of associative arrays as before. We felt that this would increase performance of the retrieval/ranking process.
 
-One late optimization that we performed pertained to the initial index creation. Instead of iterating over the tokens and searching through all documents for each token, we decided to search through the documents, and place the words in the document at their respective token. This process was significantly faster, `O(n)`, where n is the amount of tokens in the entire index. You can see this implementation in `create_frequency_index_optimized`. Conversely, the original algorithm ran in `O(m*n)` where m is the amount of tokens and n is the amount of words in the corpus since it had to traverse the corpus for every token that was generated (hence, taking 30-60 minutes). Interstingly enough, this resulted in slightly different evaluation results (See Results section), with a slightly lower MAP, a **higher** P@5 and a slightly lower P@10.
+One late optimization that we performed pertained to the initial index creation. Instead of iterating over the tokens and searching through all documents for each token, we decided to search through the documents, and place the words in the document at their respective token. This process was significantly faster, `O(n)`, where n is the amount of tokens in the entire index. You can see this implementation in `create_frequency_index_optimized`. Conversely, the original algorithm ran in `O(m*n)` where m is the amount of tokens and n is the amount of words in the corpus since it had to traverse the corpus for every token that was generated (hence, taking 30-60 minutes). Interestingly enough, this resulted in slightly different evaluation results (See Results section), with a slightly lower MAP, a **higher** P@5 and a slightly lower P@10.
 
-If you would like to see this optimized algorithm for index creation, please switch the comments in the following portion of system.py
+If you would like to see this optimized algorithm for index creation, please switch the comments in the following portion of system.py and run the system with create-index set to True, specifying a new location for the indexes to be saved.
 
             # Uncomment and run with create_index set to True if you would like to see the results using the
             # different, but faster optimized algorithm for indexing
