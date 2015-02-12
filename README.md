@@ -237,6 +237,7 @@ Below is a list of sample tokens created from preprocessing. These were used as 
 
 ###Sample Query Results
 For Query 1, querying with the words "BBC World Service staff cuts", we returned the following messages:
+
 1. BBC World Service to cut [...] a quarter of its staff - after losing millions in funding from the Foreign Office. http://bbc.in/hyGSHi
 2. BBC World Service outlines cuts to staff http://bbc.in/f8hYAT
 3. BBC News - BBC World Service cuts to be outlined to staff http://www.bbc.co.uk/news/entertainment-arts-12283356
@@ -248,7 +249,9 @@ For Query 1, querying with the words "BBC World Service staff cuts", we returned
 9. BBC World Service forecast to lose 30m listeners as cuts announced http://gu.com/p/2mkqh/tf
 10. News Radio listeners? Save the BBC world service from savage cuts. http://bit.ly/eoGJeS
 
+
 For Query 25, querying with the words "TSA airport screening", we returned the following messages:
+
 1. TSA Shuts Down Private Airport Screen Program is headline now on www.fedsmith.com.
 2. TSA Shuts Door on Private Airport Screening Program ��� Patriot Update http://patriotupdate.com/2451/tsa-shuts-door-on-private-airport-screening-program?sms_ss=twitter&at_xt=4d45868911137f91,0����� via @AddThis
 3. TSA shuts door on private airport screening program. Utter BS! - http://bit.ly/fx6Dgw #cnn
