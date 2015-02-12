@@ -26,6 +26,21 @@ class Indexer:
 
         return inverted_freq_index
 
+    def create_frequency_index_optimized(self):
+        """ Creates an inverted index with hashes using message id as key and frequency as value"""
+        inverted_freq_index = {}
+        i = 1
+        for document in self.corpus_counter:
+            counter = self.corpus_counter[document]
+            if (i % 1000 == 0):
+                print(str(float(i)/len(self.corpus_counter)*100) + "% complete creating frequency index.")
+            for word in counter:
+                if len(inverted_freq_index.get(word, {})) == 0:
+                    inverted_freq_index[word] = {}
+                inverted_freq_index[word].update({document: counter[word]});
+            i = i+1
+        return inverted_freq_index
+
     def create_tf_idf_index(self, frequency_index, corpus_size):
         tf_idf_index = frequency_index
         for term in tf_idf_index:

@@ -82,7 +82,7 @@ Place the results.txt file ine the same directory as the trec_eval script and ru
 
 	./trec_eval Trec_microblog11-qrels.txt results.txt
 
-**Our most recent results file exists at twitter_irs\data\results.txt**
+**Our most recent results file exists at twitter_irs/data/results.txt**
 
 ##Notable Algorithms, Data Structures, and Optimizations
 While there are tools available for Python Information Retrieval Systems such as Whoosh, we felt it would be a better experience to implement the indexing features from scratch using the methods and algorithms learned during class. In addition, given the nature of the data (Twitter messages), we felt that having more direct control of the index creation would allow more flexibility to handle some of the issues that arise in Twitter data (i.e. mispelled words, URLs, hashtags etc.)
@@ -95,12 +95,21 @@ In addition, we also used a Set data structure for the stopword check. By placin
 
 When creating the indexes, we initially used lists containing associative arrays with ids and frequency or term weights, respectively. However, when searching the index, it was realized that the lists would have be traversed in order to find a matching ID. As an alternative, we decided to use associative arrays as the values for each token in the index. The associative arrays contained document ids as keys, and frequency or term-weights as their values. With this approach, we were able to check the associative array value of the token in constant time (by checking if there existed a key-value pair for the document id), instead of iterating through the list of associative arrays as before. We felt that this would increase performance of the retrieval/ranking process.
 
+One late optimization that we performed pertained to the initial index creation. Instead of iterating over the tokens and searching through all documents for each token, we decided to search through the documents, and place the words in the document at their respective token. This process was significantly faster, O(n), where n is the amount of tokens in the entire index. You can see this implementation in `create_frequency_index_optimized`. Conversely, the original algorithm ran in O(m*n) where m is the amount of tokens and n is the amount of words in the corpus since it had to traverse the corpus for every token that was generated (hence, taking 30-60 minutes). Interstingly enough, this resulted in slightly different evaluation results (See Results section), with a slightly lower MAP, a **higher** P@5 and a slightly lower P@10.
+
+If you would like to see this optimized algorithm for index creation, please switch the comments in the following portion of system.py
+
+            # Uncomment and run with create_index set to True if you would like to see the results using the
+            # different, but faster optimized algorithm for indexing
+            # self.frequency_index = self.indexer.create_frequency_index_optimized()
+            self.frequency_index = self.indexer.create_frequency_index()
+ 
 For stemming, we used a Snowball based stemming algorithm which is often seen as an improvement over Porter algorithms due to its stricter restrictions and more aggressive stemming rules. After comparing stemming results from Porter, we felt it was best to use this Snowball based stemmer for our data.
 
 The system that we developed ended up with **64166 unique tokens** from **45899 twitter messages**. It is our hope to extend this by reducing the amount of tokens by handling foreign characters more gracefully.
 
 ##Results
-When running trec-eval, we received the following results for our system:
+When running trec-eval, we received the following results for our system using our original algorithm for index creation:
 
 | measure       | query | value  |
 |---------------|-------|--------|
@@ -133,6 +142,45 @@ When running trec-eval, we received the following results for our system:
 | P200          | all   | 0.1418 |
 | P500          | all   | 0.0799 |
 | P1000         | all   | 0.0457 |
+
+With a MAP of 0.2796, P@5 of 0.3796, and P@10 of 0.3347, we were pleased with the results of our information retrieval system (compared to 0.1785, 0.2667, and 0.3000 in the sample test from TREC). Through removing URLs and handling contracted words, we were able to cut down some of the tokens, but still noticed misspelled tokens. Had time permitted, we would have implemented a spell checking algorithm that would process the text and look for words that may have been mispelled or concatenated (i.e. in hashtags) and could be corrected to accurately match their respective token in the inverted index. Nonetheless, our system provided solid evaluation measures with the optimizations and tweaks made thus far. However, there is definitely room to grow and improve the text processing to provide even more accurate results after close examination of tokens.
+
+As a side note, after running trec-eval with the index created from the faster indexing algorithm, we noted the slightest differences:
+
+| measure       | query | value  |
+|---------------|-------|--------|
+| num_q         | all   | 49     |
+| num_ret       | all   | 41497  |
+| num_rel       | all   | 2640   |
+| num_rel_ret   | all   | 2154   |
+| map           | all   | 0.2768 |
+| gm_ap         | all   | 0.2090 |
+| R-prec        | all   | 0.2951 |
+| bpref         | all   | 0.3099 |
+| recip_rank    | all   | 0.5776 |
+| ircl_prn.0.00 | all   | 0.6816 |
+| ircl_prn.0.10 | all   | 0.5111 |
+| ircl_prn.0.20 | all   | 0.4440 |
+| ircl_prn.0.30 | all   | 0.3946 |
+| ircl_prn.0.40 | all   | 0.3695 |
+| ircl_prn.0.50 | all   | 0.3109 |
+| ircl_prn.0.60 | all   | 0.2330 |
+| ircl_prn.0.70 | all   | 0.1916 |
+| ircl_prn.0.80 | all   | 0.1504 |
+| ircl_prn.0.90 | all   | 0.0903 |
+| ircl_prn.1.00 | all   | 0.0264 |
+| P5            | all   | 0.3918 |
+| P10           | all   | 0.3306 |
+| P15           | all   | 0.3306 |
+| P20           | all   | 0.3143 |
+| P30           | all   | 0.2884 |
+| P100          | all   | 0.2041 |
+| P200          | all   | 0.1440 |
+| P500          | all   | 0.0765 |
+| P1000         | all   | 0.0440 |
+
+###Interesting Issues
+An interesting observations was noted when computing cosine similarity values between a query and documents with only one word (**e.g. Query 6: "NSA"**), due to the fact that only 1D vectors are used, every single matching document is given the same score of 1.0. Even if the term weight is heigher in one document, due to the 1 dimensional nature of the vector, the measure always results in 1.0. To compensate, it was proposed that a different similarity measure be used for 1 dimensional vectors that would additionally divide the measure by the maximum term frequency of that term in any document in the corpus.
 
 ###100 Example Tokens
 Below is a list of sample tokens created from preprocessing. These were used as keys in the inverted index. Note that these tokens have been stemmed and filtered, with stopwords removed.
@@ -268,5 +316,9 @@ For Query 25, querying with the words "TSA airport screening", we returned the f
 9. Really looking forward to my TSA screening; haven`t gotten laid in a couple of weeks.
 10. TSA to Test New Screening at Hartsfield-Jackson: The TSA in coming days at Hartsfield-Jackson Atlanta Internatio... http://bit.ly/e8NW0S
 
-###Interesting Issues
-An interesting observations was noted when computing cosine similarity values between a query and documents with only one word, due to the fact that only 1D vectors are used, every single matching document is given the same score of 1.0. Even if the term weight is heigher in one document, due to the 1 dimensional nature of the vector, the measure always results in 1.0.
+##Division of Work
+1. Preprocessing - Shaughn
+2. Indexing - Neil & Shaughn
+3. Retrieval & Ranking - Shaughn
+4. Results - Shaughn
+5. Evaluation - Shaughn & Neil
