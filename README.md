@@ -95,6 +95,8 @@ When creating the indexes, we initially used lists containing associative arrays
 
 For stemming, we used a Snowball based stemming algorithm which is often seen as an improvement over Porter algorithms due to its stricter restrictions and more aggressive stemming rules. After comparing stemming results from Porter, we felt it was best to use this Snowball based stemmer for our data.
 
+The system that we developed ended up with **64166 unique tokens** from **45899 twitter messages**. It is our hope to extend this by reducing the amount of tokens by handling foreign characters more gracefully.
+
 ##Results
 When running trec-eval, we received the following results for our system:
 
