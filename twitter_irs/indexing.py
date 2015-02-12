@@ -10,7 +10,10 @@ class Indexer:
         self.tokens = tokens
 
     def create_frequency_index(self):
-        """ Creates an inverted index with hashes using message id as key and frequency as value"""
+        '''
+        Creates an inverted index with hashes using message id as key and frequency as value
+        :return: The inverted index
+        '''
         inverted_freq_index = {}
         i = 1
         for token in self.tokens:
@@ -56,11 +59,20 @@ class Indexer:
 
 
     def index_to_file(self, index, path):
-        """ Outputs the inverted index as JSON to a file"""
+        '''
+        Outputs an index as JSON to a file
+        :param index: the index to write to the file
+        :param path: the path to write to
+        '''
         with open(path, "wb") as f:
             f.write(json.dumps(index))
 
     def load_index(self, path):
+        '''
+        Loads an index from a JSON file
+        :param path: the path to load the index from
+        :return: the index that was loaded
+        '''
         index = {}
         with open(path, "rb") as f:
             index = json.loads(f.read())

@@ -1,6 +1,6 @@
 #CSI4107 Assignment 1
 
-_Shaughn Finnerty (6300433), Neil Warnock (Student #)_
+_Shaughn Finnerty (6300433), Neil Warnock (Student 6446269)_
 ___
 
 ##Dependencies
